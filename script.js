@@ -1,8 +1,6 @@
 const scrambleTargets = document.querySelectorAll(".scramble-text");
 const fittedTargets = document.querySelectorAll("[data-fit-max]");
 const fittedLineTargets = document.querySelectorAll("[data-fit-lines-max]");
-const linktreeStage = document.querySelector(".linktree-stage");
-const linktree = document.querySelector(".linktree");
 const scrambleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&/<>*+";
 const prefersReducedMotion = false;
 
@@ -93,36 +91,6 @@ const fitLinesToWidth = (element) => {
   element.style.fontSize = `${best}rem`;
 };
 
-const syncMobileScale = () => {
-  if (!linktreeStage || !linktree) {
-    return;
-  }
-
-  const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
-
-  linktreeStage.style.height = "";
-  linktree.style.transform = "";
-
-  if (!isMobileViewport) {
-    return;
-  }
-
-  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-  const bodyStyles = window.getComputedStyle(document.body);
-  const paddingTop = Number.parseFloat(bodyStyles.paddingTop) || 0;
-  const paddingBottom = Number.parseFloat(bodyStyles.paddingBottom) || 0;
-  const availableHeight = Math.max(0, viewportHeight - paddingTop - paddingBottom);
-  const naturalHeight = linktree.offsetHeight;
-
-  if (!naturalHeight || !availableHeight) {
-    return;
-  }
-
-  const scale = Math.min(1, availableHeight / naturalHeight);
-  linktree.style.transform = `scale(${scale})`;
-  linktreeStage.style.height = `${naturalHeight * scale}px`;
-};
-
 const syncFittedText = () => {
   fittedTargets.forEach((element) => {
     fitTextToWidth(element);
@@ -131,8 +99,6 @@ const syncFittedText = () => {
   fittedLineTargets.forEach((element) => {
     fitLinesToWidth(element);
   });
-
-  syncMobileScale();
 };
 
 scrambleTargets.forEach((element, index) => {
@@ -146,13 +112,8 @@ scrambleTargets.forEach((element, index) => {
 
 window.addEventListener("resize", syncFittedText);
 
-if (window.visualViewport) {
-  window.visualViewport.addEventListener("resize", syncFittedText);
-}
-
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(syncFittedText);
 }
 
 syncFittedText();
-
