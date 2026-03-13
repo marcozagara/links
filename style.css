@@ -188,7 +188,6 @@ body {
 
   .linktree {
     width: min(360px, calc(100vw - 56px));
-    transform-origin: top center;
   }
 }
 
